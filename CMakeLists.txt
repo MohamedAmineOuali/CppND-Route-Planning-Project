@@ -4,23 +4,27 @@ cmake_minimum_required(VERSION 3.11.3)
 set(CMAKE_CXX_STANDARD 17)
 
 # Add the path of the cmake files to the CMAKE_MODULE_PATH
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+#set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR}/cmake)
+
 
 project(OSM_A_star_search)
 
 # Set library output path to /lib
-set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
+#set(LIBRARY_OUTPUT_PATH "${CMAKE_SOURCE_DIR}/lib")
 
 # Locate project prerequisites
-find_package(io2d REQUIRED)
-find_package(Cairo)
-find_package(GraphicsMagick)
+#find_package(io2d REQUIRED)
+#find_package(Cairo)
+#find_package(GraphicsMagick)
 
 # Set IO2D flags
 set(IO2D_WITHOUT_SAMPLES 1)
 set(IO2D_WITHOUT_TESTS 1)
 
+
 # Add the pugixml and GoogleTest library subdirectories
+add_subdirectory(thirdparty/P0267_RefImpl/)
+
 add_subdirectory(thirdparty/pugixml)
 add_subdirectory(thirdparty/googletest)
 
@@ -28,7 +32,7 @@ add_subdirectory(thirdparty/googletest)
 add_executable(OSM_A_star_search src/main.cpp src/model.cpp src/render.cpp src/route_model.cpp src/route_planner.cpp)
 
 target_link_libraries(OSM_A_star_search
-    PRIVATE io2d::io2d
+    PRIVATE io2d
     PUBLIC pugixml
 )
 
