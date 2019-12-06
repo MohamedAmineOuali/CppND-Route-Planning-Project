@@ -1,7 +1,11 @@
 #include "route_planner.h"
 #include <algorithm>
 
-RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y): m_Model(model) {
+RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, float end_x, float end_y):
+m_Model(model),
+open_list([](auto const & n1,auto const & n2){
+    return n1->h_value+n1->g_value>n2->h_value+n2->g_value;
+}){
     // Convert inputs to percentage:
     start_x *= 0.01;
     start_y *= 0.01;
@@ -12,6 +16,8 @@ RoutePlanner::RoutePlanner(RouteModel &model, float start_x, float start_y, floa
     // Store the nodes you find in the RoutePlanner's start_node and end_node attributes.
     start_node=&model.FindClosestNode(start_x,start_y);
     end_node=&model.FindClosestNode(end_x,end_y);
+
+
 
 }
 
@@ -42,7 +48,7 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
         n->g_value=current_node->g_value+n->distance(*current_node);
         n->parent=current_node;
         n->visited=true;
-        open_list.push_back(n);
+        open_list.push(n);
     }
 
 
@@ -57,13 +63,9 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
 // - Return the pointer.
 
 RouteModel::Node *RoutePlanner::NextNode() {
-    std::sort(open_list.begin(),open_list.end(),[](auto const & n1,auto const & n2){
-       return n1->h_value+n1->g_value>n2->h_value+n2->g_value;
-    });
+    auto node=open_list.top();
 
-    auto node=open_list.back();
-
-    open_list.pop_back();
+    open_list.pop();
 
     return node;
 }

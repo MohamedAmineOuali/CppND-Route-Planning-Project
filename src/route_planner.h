@@ -3,8 +3,11 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
+#include <functional>
 #include <string>
 #include "route_model.h"
+
 
 
 class RoutePlanner {
@@ -22,7 +25,8 @@ class RoutePlanner {
 
   private:
     // Add private variables or methods declarations here.
-    std::vector<RouteModel::Node*> open_list;
+    std::priority_queue<RouteModel::Node*,std::vector<RouteModel::Node*>,
+            std::function<bool(RouteModel::Node const*const,RouteModel::Node const*const)>> open_list;
     RouteModel::Node *start_node;
     RouteModel::Node *end_node;
 
