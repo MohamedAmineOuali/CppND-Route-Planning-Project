@@ -19,16 +19,16 @@ class RouteModel : public Model {
         std::vector<Node *> neighbors;
 
         void FindNeighbors();
-        float distance(Node other) const {
+        float distance(Node const &other) const {
             return std::sqrt(std::pow((x - other.x), 2) + std::pow((y - other.y), 2));
         }
 
         Node(){}
-        Node(int idx, RouteModel * search_model, Model::Node node) : Model::Node(node), parent_model(search_model), index(idx) {}
+        Node(int idx, RouteModel * search_model, Model::Node const & node) : Model::Node(node), parent_model(search_model), index(idx) {}
 
       private:
         int index;
-        Node * FindNeighbor(std::vector<int> node_indices);
+        Node * FindNeighbor(std::vector<int> const & node_indices);
         RouteModel * parent_model = nullptr;
     };
 
