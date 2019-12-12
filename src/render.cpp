@@ -15,12 +15,13 @@ Render::Render( RouteModel &model ):
 
 void Render::Display( io2d::output_surface &surface )
 {
-    m_Scale = static_cast<float>(std::min(surface.dimensions().x(), surface.dimensions().y()));    
+
+    m_Scale = static_cast<float>(std::min(surface.dimensions().x(), surface.dimensions().y()));
     m_PixelsInMeter = static_cast<float>(m_Scale / m_Model.MetricScale()); 
-    m_Matrix = io2d::matrix_2d::create_scale({m_Scale, -m_Scale}) *
+    m_Matrix = io2d::matrix_2d::create_scale({static_cast<float>(surface.dimensions().x()), -static_cast<float>(surface.dimensions().y())}) *
                io2d::matrix_2d::create_translate({0.f, static_cast<float>(surface.dimensions().y())});
-    
-    surface.paint(m_BackgroundFillBrush);        
+
+    surface.paint(m_BackgroundFillBrush);
     DrawLanduses(surface);
     DrawLeisure(surface);
     DrawWater(surface);    
@@ -35,7 +36,7 @@ void Render::Display( io2d::output_surface &surface )
 void Render::DrawPath(io2d::output_surface &surface) const{
     io2d::render_props aliased{ io2d::antialias::none };
     io2d::brush foreBrush{ io2d::rgba_color::orange}; 
-    float width = 5.0f;
+    float width = 2.0f;
     surface.stroke(foreBrush, PathLine(), std::nullopt, io2d::stroke_props{width});
 
 }
