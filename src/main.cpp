@@ -28,6 +28,7 @@ static std::optional<std::vector<std::byte>> ReadFile(const std::string &path)
     return std::move(contents);
 }
 
+
 int main(int argc, const char **argv)
 {    
     std::string osm_data_file = "";
@@ -62,8 +63,9 @@ int main(int argc, const char **argv)
     RouteModel model{osm_data};
 
     // Create RoutePlanner object and perform A* search.
-    RoutePlanner route_planner{model, 10, 10, 90, 90};
+    RoutePlanner route_planner{model, 10, 10, 80, 80};
     route_planner.AStarSearch();
+
     auto stop = std::chrono::high_resolution_clock::now();
     auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(stop - start);
 
@@ -74,12 +76,35 @@ int main(int argc, const char **argv)
     // Render results of search.
     Render render{model};
 
-    auto display = io2d::output_surface{400, 400, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};
-    display.size_change_callback([](io2d::output_surface& surface){
-        surface.dimensions(surface.display_dimensions());
+
+    auto display = io2d::output_surface{900, 770, io2d::format::argb32, io2d::scaling::none, io2d::refresh_style::fixed, 30};
+    display.size_change_callback([](io2d::output_surface& surface,auto dim){
+        surface.dimensions(dim);
     });
+
+
+
     display.draw_callback([&](io2d::output_surface& surface){
         render.Display(surface);
+
     });
+
+    display.events_callback(io2d::default_graphics_surfaces::_EventCallBack([&display,&route_planner](SDL_Event e){
+
+        if(e.type==SDL_MOUSEBUTTONUP){
+
+            if(e.button.button==1){
+                auto dimension=display.dimensions();
+                route_planner.setstart(e.button.x*100.0/dimension.x(),(dimension.y()-e.button.y)*100.0/dimension.y());
+            }
+            else if(e.button.button==3){
+                auto dimension=display.dimensions();
+                route_planner.setend(e.button.x*100.0/dimension.x(),(dimension.y()-e.button.y)*100.0/dimension.y());
+            }
+
+        }
+    }));
+
+
     display.begin_show();
 }

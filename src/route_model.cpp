@@ -5,7 +5,7 @@ RouteModel::RouteModel(const std::vector<std::byte> &xml) : Model(xml) {
     // Create RouteModel nodes.
     int counter = 0;
     for (Model::Node node : this->Nodes()) {
-        m_Nodes.emplace_back(Node(counter, this, node));
+        m_Nodes.emplace_back(counter, this, node);
         counter++;
     }
     CreateNodeToRoadHashmap();
@@ -72,4 +72,15 @@ RouteModel::Node &RouteModel::FindClosestNode(float x, float y) {
     }
 
     return SNodes()[closest_idx];
+}
+
+void RouteModel::reinitialiseNodeList() {
+    for(auto& n: m_Nodes)
+    {
+        n.parent = nullptr;
+        n.h_value = std::numeric_limits<float>::max();
+        n.g_value = 0.0;
+        n.visited = false;
+        n.neighbors.clear();
+    }
 }

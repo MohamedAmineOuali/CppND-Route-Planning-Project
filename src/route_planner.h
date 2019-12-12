@@ -16,6 +16,8 @@ class RoutePlanner {
     // Add public variables or methods declarations here.
     float GetDistance() const {return distance;}
     void AStarSearch();
+    void setstart(float start_x, float start_y);
+    void setend(float end_x, float end_y);
 
     // The following methods have been made public so we can test them individually.
     void AddNeighbors(RouteModel::Node *current_node);
