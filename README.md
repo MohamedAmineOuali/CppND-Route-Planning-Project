@@ -15,9 +15,8 @@ It contains my work:
   [IO2D library](https://github.com/MohamedAmineOuali/P0267_RefImpl/tree/Fix_bugs_SDL2)
 * Use SDL2 backend to dynamically select the start and end points for A* algorithm from the map
 
-<div style="text-align: center">
-<img src="demo.gif" width="600" height="450" />
-
+<div align="center">
+    <img src="demo.gif" width="600" height="450" />
 </div>
 
 
